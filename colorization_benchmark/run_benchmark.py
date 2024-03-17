@@ -1,9 +1,11 @@
 import argparse
 from pathlib import Path
 
+from PIL import Image
 from tqdm import tqdm
 
-from recolor import DeepRemaster
+from colorization_benchmark.models.deep_remaster import DeepRemaster
+from colorization_benchmark.utils import chromaticity
 
 benchmark_pairs_single = {
     "recolor_source": [[  # recolor target
@@ -153,7 +155,9 @@ layout: default
                 save_path = task_dir / f"{source_name.with_suffix('').name}_color.png"
                 color = colorizer.colorize(source_name, references)
                 color.save(save_path)
-                # todo save chromaticity diagram
+
+                xy_coordinates = chromaticity.image_to_cie_xy(save_path)
+                chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"))
 
                 table_line += '<img src="{{\'/' + str(save_path.relative_to(web_root)) + '\' | relative_url }}" width="200" />  |'
             table_line += '<img src="{{\'/' + str(references[0].relative_to(web_root)) + '\' | relative_url }}" width="200" />  |'  # assume same reference in row
@@ -190,7 +194,9 @@ layout: default
                 save_path = task_dir / f"{source_name.with_suffix('').name}_color.png"
                 color = colorizer.colorize(source_name, references)
                 color.save(save_path)
-                # todo save chromaticity diagram
+
+                xy_coordinates = chromaticity.image_to_cie_xy(save_path)
+                chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"))
 
                 table_line += '<img src="{{\'/' + str(save_path.relative_to(web_root)) + '\' | relative_url }}" width="200" />  |'
             table_line += '<img src="{{\'/' + str(references[0].relative_to(web_root)) + '\' | relative_url }}" width="200" />  |'  # assume same reference in row

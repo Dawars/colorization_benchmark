@@ -11,26 +11,18 @@
    Edgar Simo-Serra, Waseda University
    ess@waseda.jp, https://esslab.jp/~ess/
 """
-import glob
 from pathlib import Path
+from typing import List
+import argparse
 
 import torch
-import torch.nn as nn
 from torchvision import transforms
-from torchvision.utils import save_image
-import cv2
 from PIL import Image
 import numpy as np
-from tqdm import tqdm
-import os
-import argparse
-import subprocess
 
-from typing import List
-
-import utils
-from colorization_benchmark__.colorization_benchmark.base_colorizer import Colorizer
-from model.remasternet import NetworkColor
+from colorization_benchmark.base_colorizer import Colorizer
+from third_party.deepremaster import utils
+from third_party.deepremaster.model.remasternet import NetworkC
 
 
 class DeepRemaster(Colorizer):
@@ -42,7 +34,7 @@ class DeepRemaster(Colorizer):
 
         # Load remaster network
         state_dict = torch.load(model_path)
-        self.modelC = NetworkColor()
+        self.modelC = NetworkC()
         self.modelC.load_state_dict(state_dict['modelC'])
         self.modelC = self.modelC.to(self.device)
         self.modelC.eval()
