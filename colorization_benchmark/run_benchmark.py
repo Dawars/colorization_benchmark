@@ -186,8 +186,8 @@ def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: P
     for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
         image_id = 0
         for row in tasks:
-            table_line = f'| '
             for task in row:
+                table_line = f'| '
                 for i in range(5):
                     lightning.seed_everything(i * 100)
 
@@ -341,10 +341,12 @@ if __name__ == '__main__':
     output_dir: Path = opt.output_dir
     image_dir: Path = opt.image_dir
 
+    markdown_only = False
+
     model_path = "../third_party/deepremaster/model/remasternet.pth.tar"
     colorizer = DeepRemaster(model_path, mindim=320)
-    run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=True)
+    run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=markdown_only)
 
     model_path = "../third_party/unicolor/framework/checkpoints/unicolor_mscoco/mscoco_step259999"
     colorizer = UniColor(model_path)
-    run_benchmark(colorizer, image_dir, output_dir, True, True, False, markdown_only=True)
+    run_benchmark(colorizer, image_dir, output_dir, True, True, False, markdown_only=markdown_only)
