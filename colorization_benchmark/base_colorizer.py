@@ -1,4 +1,5 @@
 class Colorizer:
-    def __init__(self):
+    method_name: str
 
+    def __init__(self):
         pass
