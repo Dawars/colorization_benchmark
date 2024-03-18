@@ -44,7 +44,7 @@ class UniColor(Colorizer):
             # display(warped)
             # point_img = draw_strokes(gray_image, [256, 256], points)  # todo return as attention
             with torch.no_grad():
-                output = colorizer.sample(gray_image, points, topk=100)
+                output = self.colorizer.sample(gray_image, points, topk=100)
 
             # output = Image.fromarray(np.concatenate([np.array(point_img), np.array(I_exp)], axis=1)))
         else:
