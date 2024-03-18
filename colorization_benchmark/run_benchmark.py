@@ -23,11 +23,6 @@ benchmark_pairs_unconditional = {
         {"source": "fortepan_229825.jpg", "references": []},
         {"source": "fortepan_102400.jpg", "references": []},
     ]],
-    "partial_reference": [[  # partial reference
-        {"source": "fortepan_201867.jpg", "references": []},
-        {"source": "fortepan_229825.jpg", "references": []},
-        {"source": "fortepan_102400.jpg", "references": []},
-    ]],
     "partial_source": [[  # partial source
         {"source": "fortepan_18476.jpg", "references": []},
         {"source": "fortepan_79821.jpg", "references": []},
