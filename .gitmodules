@@ -1,3 +1,6 @@
 [submodule "third_party/deepremaster"]
 	path = third_party/deepremaster
 	url = https://github.com/satoshiiizuka/siggraphasia2019_remastering.git
+[submodule "third_party/unicolor"]
+	path = third_party/unicolor
+	url = https://github.com/luckyhzt/unicolor.git

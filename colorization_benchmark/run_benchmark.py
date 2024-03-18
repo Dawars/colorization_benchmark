@@ -321,6 +321,10 @@ if __name__ == '__main__':
     output_dir: Path = opt.output_dir
     image_dir: Path = opt.image_dir
 
-    model_path = "/home/dawars/projects/colorization/siggraphasia2019_remastering/model/remasternet.pth.tar"
-    colorizer = DeepRemaster(model_path, mindim=320)
-    run_benchmark(colorizer, image_dir, output_dir, False, True, True)
+    # model_path = "/home/dawars/projects/colorization/siggraphasia2019_remastering/model/remasternet.pth.tar"
+    # colorizer = DeepRemaster(model_path, mindim=320)
+    # run_benchmark(colorizer, image_dir, output_dir, False, True, True)
+
+    model_path = "../third_party/unicolor/framework/checkpoints/unicolor_mscoco/mscoco_step259999"
+    colorizer = UniColor(model_path)
+    run_benchmark(colorizer, image_dir, output_dir, True, True, False)
