@@ -22,6 +22,7 @@ from third_party.unicolor.sample.utils_func import *
 
 class UniColor(Colorizer):
     method_name = "unicolor"
+    description = "This model generate diverse results where the color is not constrained by the reference image."
 
     def __init__(self, model_path: Path, **opts):
         super(Colorizer).__init__()

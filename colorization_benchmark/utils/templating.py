@@ -9,7 +9,7 @@ def image_html(src: Path, web_root: Path, width: int = 200):
     return '<img src="{{\'/' + str(src.relative_to(web_root)) + '\' | relative_url }}" width="200"/>'
 
 
-def table_header(method_name: str, benchmark_type: str, headers: list[str]):
+def table_header(method_name: str, benchmark_type: str, headers: list[str], description: str = ""):
     header = "| "
     header2 = "| "
     for name in headers:
@@ -23,6 +23,8 @@ category: {benchmark_type}
 ---
 # {pretty_print(benchmark_type)}
 ## {pretty_print(method_name)}
+
+{description}
 
 {header}
 {header2}

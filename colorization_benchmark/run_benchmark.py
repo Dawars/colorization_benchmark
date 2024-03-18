@@ -179,7 +179,8 @@ def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: P
         shutil.rmtree(experiment_root))
 
     table_md = templating.table_header(method_name, benchmark_type,
-                                       ["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"])
+                                       ["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"],
+                                       colorizer.description)
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
@@ -228,7 +229,8 @@ def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir
         shutil.rmtree(experiment_root))
 
     table_md = templating.table_header(method_name, benchmark_type,
-                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"])
+                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
+                                       colorizer.description)
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_single.items()):
         image_id = 0
@@ -278,7 +280,8 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
         shutil.rmtree(experiment_root))
 
     table_md = templating.table_header(method_name, benchmark_type,
-                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"])
+                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
+                                       colorizer.description)
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_multi.items()):
@@ -314,7 +317,7 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
             if rows > 1:  # don't print ref in first row
                 table_line += f"{templating.image_html(references[0], web_root)} |"  # assume same reference in row
             table_md += table_line + "\n"
-    
+
     table_md += templating.footer(method_name, benchmark_type)
     (experiment_root / "index.md").write_text(table_md)
 

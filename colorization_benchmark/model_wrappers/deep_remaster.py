@@ -27,6 +27,13 @@ from third_party.deepremaster.model.remasternet import NetworkC
 
 class DeepRemaster(Colorizer):
     method_name = "deepremaster"
+    description = ("This model is originally designed for film colorization.\n"
+                   "To run this benchmark the input images is duplicated 5 times.\n"
+                   "The reference images are supposed to be colored frames chosen from the movies.\n"
+                   "This means that significant differences in the reference images cannot be used, as illustrated below.\n"
+                   "Another interesting finding is that the temporal convolution, responsible for homigenizing the color "
+                   "between conscutive frames, learned to color the sky and trees without reference."
+                   )
 
     def __init__(self, model_path: Path, **opts):
         super(Colorizer).__init__()
