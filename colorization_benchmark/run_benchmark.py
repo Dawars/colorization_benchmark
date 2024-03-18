@@ -11,6 +11,8 @@ from colorization_benchmark.model_wrappers.unicolor import UniColor
 from colorization_benchmark.utils import chromaticity
 from colorization_benchmark.utils import templating
 
+JPG_QUALITY = 95
+
 benchmark_pairs_unconditional = {
     "recolor_source": [[  # recolor target
         {"source": "fortepan_183722.jpg", "references": []},
@@ -202,10 +204,10 @@ def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: P
                 source_name = image_dir / task["source"]
 
                 image_id += 1
-                save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.png"
-                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"
+                save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
+                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
                 color = colorizer.colorize(source_name, None)
-                color.save(save_path_color)
+                color.save(save_path_color, quality=JPG_QUALITY)
 
                 xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
                 chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
@@ -241,10 +243,10 @@ def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir
                 references = [image_dir / name for name in task["references"]]
 
                 image_id += 1
-                save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.png"
-                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"
+                save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
+                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
                 color = colorizer.colorize(source_name, references)
-                color.save(save_path_color)
+                color.save(save_path_color, quality=JPG_QUALITY)
 
                 xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
                 chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
@@ -281,10 +283,10 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
                 references = [image_dir / name for name in task["references"]]
 
                 image_id += 1
-                save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.png"
-                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"
+                save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
+                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
                 color = colorizer.colorize(source_name, references)
-                color.save(save_path_color)
+                color.save(save_path_color, quality=JPG_QUALITY)
 
                 xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
                 chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
