@@ -9,7 +9,7 @@ category: multi_reference
 
 This model is originally designed for film colorization.
 
-To run this benchmark the input images is duplicated 5 times.
+To run this benchmark the input image is duplicated 5 times.
 
 The reference images are supposed to be colored frames chosen from the movies.
 
