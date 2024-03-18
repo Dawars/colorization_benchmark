@@ -7,9 +7,10 @@ import lightning
 from PIL import Image
 from tqdm import tqdm
 
-from colorization_benchmark.base_colorizer import Colorizer
-from colorization_benchmark.model_wrappers.deep_remaster import DeepRemaster
-from colorization_benchmark.model_wrappers.unicolor import UniColor
+from colorization_benchmark.model_wrappers.base_colorizer import Colorizer
+# from colorization_benchmark.model_wrappers.deep_remaster import DeepRemaster
+# from colorization_benchmark.model_wrappers.unicolor import UniColor
+from colorization_benchmark.model_wrappers.pdnla_net import PDLNANet
 from colorization_benchmark.utils import chromaticity
 from colorization_benchmark.utils import templating
 
@@ -351,6 +352,6 @@ if __name__ == '__main__':
     colorizer = DeepRemaster(model_path, mindim=320)
     run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=markdown_only)
 
-    model_path = "../third_party/unicolor/framework/checkpoints/unicolor_mscoco/mscoco_step259999"
-    colorizer = UniColor(model_path)
-    run_benchmark(colorizer, image_dir, output_dir, True, True, False, markdown_only=markdown_only)
+    model_path = "../third_party/pdnla_net/model_1_ema.pt"
+    colorizer = PDLNANet(model_path)
+    run_benchmark(colorizer, image_dir, output_dir, False, True, False, markdown_only=markdown_only)
