@@ -2,6 +2,7 @@ import argparse
 import shutil
 from pathlib import Path
 
+import torch
 import lightning
 from PIL import Image
 from tqdm import tqdm
@@ -200,7 +201,8 @@ def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: P
                     save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
                     save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
                     if not markdown_only:
-                        results = colorizer.colorize(source_name, None)
+                        with torch.no_grad():
+                            results = colorizer.colorize(source_name, None)
                         color = results["color"]
                         attention = results.get("attention")
                         color.save(save_path_color, quality=JPG_QUALITY)
@@ -249,7 +251,8 @@ def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir
                 save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
                 save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
                 if not markdown_only:
-                    results = colorizer.colorize(source_name, references)
+                    with torch.no_grad():
+                        results = colorizer.colorize(source_name, references)
                     color = results["color"]
                     attention = results.get("attention")
                     color.save(save_path_color, quality=JPG_QUALITY)
@@ -301,7 +304,8 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
                 save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
                 save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
                 if not markdown_only:
-                    results = colorizer.colorize(source_name, references)
+                    with torch.no_grad():
+                        results = colorizer.colorize(source_name, references)
                     color = results["color"]
                     attention = results.get("attention")
                     color.save(save_path_color, quality=JPG_QUALITY)
