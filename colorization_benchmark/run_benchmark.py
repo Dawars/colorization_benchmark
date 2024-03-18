@@ -2,6 +2,7 @@ import argparse
 import shutil
 from pathlib import Path
 
+import lightning
 from PIL import Image
 from tqdm import tqdm
 
@@ -18,36 +19,23 @@ benchmark_pairs_unconditional = {
         {"source": "fortepan_183722.jpg", "references": []},
         {"source": "fortepan_250610.jpg", "references": []},
         {"source": "fortepan_183723.jpg", "references": []},
-        {"source": "fortepan_251236.jpg", "references": []}
-    ]],
-    "full_correspondence": [[  # full correspondence
+        {"source": "fortepan_251236.jpg", "references": []},
         {"source": "fortepan_201867.jpg", "references": []},
         {"source": "fortepan_229825.jpg", "references": []},
         {"source": "fortepan_102400.jpg", "references": []},
-    ]],
-    "partial_source": [[  # partial source
         {"source": "fortepan_18476.jpg", "references": []},
         {"source": "fortepan_79821.jpg", "references": []},
         {"source": "fortepan_67270.jpg", "references": []},
-    ]],
-    "semantic_correspondence_strong": [[  # semantic correspondence
         {"source": "fortepan_251148.jpg", "references": []},
-        {"source": "fortepan_97196.jpg", "references":  []},
-        {"source": "fortepan_97191.jpg", "references":  []},
-    ]],
-    "semantic_correspondence_weak": [[  # semantic correspondence
+        {"source": "fortepan_97196.jpg", "references": []},
+        {"source": "fortepan_97191.jpg", "references": []},
         {"source": "fortepan_148611.jpg", "references": []},
-        {"source": "fortepan_84203.jpg", "references":  []},
-        {"source": "fortepan_84203.jpg", "references":  []},
-    ]],
-    "distractors": [[  # distractors, needs learning (semantic, foliage, people)
-        {"source": "fortepan_18098.jpg", "references":  []},
+        {"source": "fortepan_84203.jpg", "references": []},
+        {"source": "fortepan_18098.jpg", "references": []},
         {"source": "fortepan_276876.jpg", "references": []},
-        {"source": "fortepan_40115.jpg", "references":  []},
-    ]],
-    # "contemporary": [  # contemporary
-    #     # {"source": "fortepan_197819.jpg", "references": [".jpg"]},
-    # ]
+        {"source": "fortepan_40115.jpg", "references": []},
+        {"source": "fortepan_197819.jpg", "references": []},
+    ]]
 }
 
 benchmark_pairs_single = {
@@ -182,53 +170,65 @@ benchmark_pairs_multi = {
 }
 
 
-def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path):
+def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
     web_root = output_dir.parent
     benchmark_type = "unconditional"
     method_name = colorizer.method_name
     experiment_root = output_dir / benchmark_type / method_name  # save table here
-    if experiment_root.exists(): (
+    if not markdown_only and experiment_root.exists(): (
         shutil.rmtree(experiment_root))
 
-    table_md = templating.table_header(method_name, benchmark_type)
+    table_md = templating.table_header(method_name, benchmark_type,
+                                       ["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"])
 
     rows = 0
-    for task_name, tasks in tqdm(benchmark_pairs_single.items()):
+    for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
         image_id = 0
         for row in tasks:
-            table_line = f'| {templating.pretty_print(task_name)} | '
-            rows += 1
+            table_line = f'| '
             for task in row:
-                task_dir = output_dir / benchmark_type / method_name / task_name / str(image_id)
-                task_dir.mkdir(exist_ok=True, parents=True)
-                source_name = image_dir / task["source"]
+                for i in range(5):
+                    lightning.seed_everything(i * 100)
 
-                image_id += 1
-                save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
-                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
-                color = colorizer.colorize(source_name, None)
-                color.save(save_path_color, quality=JPG_QUALITY)
+                    task_dir = output_dir / benchmark_type / method_name / task_name / str(image_id)
+                    task_dir.mkdir(exist_ok=True, parents=True)
+                    source_name = image_dir / task["source"]
 
-                xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
-                chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
+                    image_id += 1
+                    save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
+                    save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
+                    save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
+                    if not markdown_only:
+                        results = colorizer.colorize(source_name, None)
+                        color = results["color"]
+                        attention = results.get("attention")
+                        color.save(save_path_color, quality=JPG_QUALITY)
+                        if attention:
+                            attention.save(save_path_attention, quality=JPG_QUALITY)
 
-                table_line += f"{templating.image_html(save_path_color, web_root)}"
-                table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
-            # if rows > 1:  # don't print ref in first row
-            #     table_line += f"{templating.image_html(references[0], web_root)} |"  # assume same reference in row
-            table_md += table_line + "\n"
+                        xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
+                        chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
+
+                    table_line += f"{templating.image_html(save_path_color, web_root)}"
+                    table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
+                    if save_path_attention.exists():
+                        table_line += f"{templating.image_html(save_path_attention, web_root)} |"
+                table_md += table_line + "\n"
+
+    table_md += templating.footer(method_name, benchmark_type)
     (experiment_root / "index.md").write_text(table_md)
 
 
-def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path):
+def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
     web_root = output_dir.parent
     benchmark_type = "single_reference"
     method_name = colorizer.method_name
     experiment_root = output_dir / benchmark_type / method_name  # save table here
-    if experiment_root.exists(): (
+    if not markdown_only and experiment_root.exists(): (
         shutil.rmtree(experiment_root))
 
-    table_md = templating.table_header(method_name, benchmark_type)
+    table_md = templating.table_header(method_name, benchmark_type,
+                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"])
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_single.items()):
         image_id = 0
@@ -244,30 +244,39 @@ def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir
 
                 image_id += 1
                 save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
+                save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
                 save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
-                color = colorizer.colorize(source_name, references)
-                color.save(save_path_color, quality=JPG_QUALITY)
+                if not markdown_only:
+                    results = colorizer.colorize(source_name, references)
+                    color = results["color"]
+                    attention = results.get("attention")
+                    color.save(save_path_color, quality=JPG_QUALITY)
+                    if attention:
+                        attention.save(save_path_attention, quality=JPG_QUALITY)
 
-                xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
-                chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
+                    xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
+                    chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
 
                 table_line += f"{templating.image_html(save_path_color, web_root)}"
-                table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"  # assume same reference in row
+                table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
+                if save_path_attention.exists():
+                    table_line += f"{templating.image_html(save_path_attention, web_root)} |"
             if rows > 1:  # don't print ref in first row
-                table_line += f"{templating.image_html(references[0], web_root)} |"  # assume same reference in row
+                table_line += f"{templating.image_html(references[0], web_root)} |"
             table_md += table_line + "\n"
     (experiment_root / "index.md").write_text(table_md)
 
 
-def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path):
+def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
     web_root = output_dir.parent
     benchmark_type = "multi_reference"
     method_name = colorizer.method_name
     experiment_root = output_dir / benchmark_type / method_name  # save table here
-    if experiment_root.exists(): (
+    if not markdown_only and experiment_root.exists(): (
         shutil.rmtree(experiment_root))
 
-    table_md = templating.table_header(method_name, benchmark_type)
+    table_md = templating.table_header(method_name, benchmark_type,
+                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"])
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_multi.items()):
@@ -285,14 +294,21 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
                 image_id += 1
                 save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
                 save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
-                color = colorizer.colorize(source_name, references)
-                color.save(save_path_color, quality=JPG_QUALITY)
+                save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
+                if not markdown_only:
+                    results = colorizer.colorize(source_name, references)
+                    color = results["color"]
+                    attention = results.get("attention")
+                    color.save(save_path_color, quality=JPG_QUALITY)
+                    if attention:
+                        attention.save(save_path_attention, quality=JPG_QUALITY)
 
-                xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
-                chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
+                    xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
+                    chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
 
                 table_line += f"{templating.image_html(save_path_color, web_root)}"
-                table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"  # assume same reference in row
+                table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
+                if save_path_attention.exists():                    table_line += f"{templating.image_html(save_path_attention, web_root)} |"
             if rows > 1:  # don't print ref in first row
                 table_line += f"{templating.image_html(references[0], web_root)} |"  # assume same reference in row
             table_md += table_line + "\n"
@@ -300,13 +316,13 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
 
 
 def run_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, unconditional: bool, single_reference: bool,
-                  multi_reference: bool):
+                  multi_reference: bool, markdown_only=False):
     if unconditional:
-        unconditional_benchmark(colorizer, image_dir, output_dir)
+        unconditional_benchmark(colorizer, image_dir, output_dir, markdown_only)
     if single_reference:
-        single_reference_benchmark(colorizer, image_dir, output_dir)
+        single_reference_benchmark(colorizer, image_dir, output_dir, markdown_only)
     if multi_reference:
-        multi_reference_benchmark(colorizer, image_dir, output_dir)
+        multi_reference_benchmark(colorizer, image_dir, output_dir, markdown_only)
 
 
 if __name__ == '__main__':
@@ -318,10 +334,10 @@ if __name__ == '__main__':
     output_dir: Path = opt.output_dir
     image_dir: Path = opt.image_dir
 
-    # model_path = "/home/dawars/projects/colorization/siggraphasia2019_remastering/model/remasternet.pth.tar"
-    # colorizer = DeepRemaster(model_path, mindim=320)
-    # run_benchmark(colorizer, image_dir, output_dir, False, True, True)
+    model_path = "../third_party/deepremaster/model/remasternet.pth.tar"
+    colorizer = DeepRemaster(model_path, mindim=320)
+    run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=True)
 
     model_path = "../third_party/unicolor/framework/checkpoints/unicolor_mscoco/mscoco_step259999"
     colorizer = UniColor(model_path)
-    run_benchmark(colorizer, image_dir, output_dir, True, True, False)
+    run_benchmark(colorizer, image_dir, output_dir, True, True, False, markdown_only=True)

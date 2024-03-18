@@ -107,7 +107,7 @@ class DeepRemaster(Colorizer):
             out_c = output_ab[0, :, i, :, :]
             output = torch.cat((out_l, out_c), dim=0).numpy().transpose((1, 2, 0))
             output = Image.fromarray(np.uint8(utils.convertLAB2RGB(output) * 255))
-            return output
+            return {"color": output}
 
 
 if __name__ == '__main__':

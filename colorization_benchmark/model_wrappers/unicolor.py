@@ -34,6 +34,7 @@ class UniColor(Colorizer):
     def colorize(self, input_path: Path, reference_paths: List[Path]):
         gray_image = Image.open(input_path).convert("L")
 
+        attention = None
         if reference_paths:
             ref_image = Image.open(reference_paths[0]).convert('RGB')
             # Get hint points
@@ -42,7 +43,7 @@ class UniColor(Colorizer):
             # warped = color_resize(gray_image, warped)  # warp chromaticity based on correspondence
             # Show warped image
             # display(warped)
-            # point_img = draw_strokes(gray_image, [256, 256], points)  # todo return as attention
+            attention = point_img = draw_strokes(gray_image, [256, 256], points)
             with torch.no_grad():
                 output = self.colorizer.sample(gray_image, points, topk=100)
 
@@ -50,7 +51,7 @@ class UniColor(Colorizer):
         else:
             with torch.no_grad():
                 output = self.colorizer.sample(gray_image, [], topk=100)
-        return output
+        return {"color": output, "attention": attention}
 
 
 if __name__ == '__main__':
