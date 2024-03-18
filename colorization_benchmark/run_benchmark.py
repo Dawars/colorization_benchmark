@@ -6,10 +6,10 @@ from PIL import Image
 from tqdm import tqdm
 
 from colorization_benchmark.base_colorizer import Colorizer
-from colorization_benchmark.models.deep_remaster import DeepRemaster
+from colorization_benchmark.model_wrappers.deep_remaster import DeepRemaster
+from colorization_benchmark.model_wrappers.unicolor import UniColor
 from colorization_benchmark.utils import chromaticity
 from colorization_benchmark.utils import templating
-from run_benchmark import benchmark_pairs_multi
 
 benchmark_pairs_unconditional = {
     "recolor_source": [[  # recolor target

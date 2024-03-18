@@ -97,6 +97,7 @@ class DeepRemaster(Colorizer):
 
             # Perform colorization
             block_input = torch.tile(input, (1, 1, block, 1, 1))
+            # block_input = torch.cat([input, torch.zeros((1, 1, block - 1, input.shape[-2], input.shape[-1]), device=self.device)], dim=2)
             output_ab = self.modelC(block_input, refimgs)
             output_l = block_input.detach().cpu()  # gray
             output_ab = output_ab.detach().cpu()  # chromaticity
