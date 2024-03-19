@@ -13,7 +13,9 @@ scikit-image = "^0.22.0"
 colour-science = "^0.4.4"
 tqdm = "^4.66.0"
 PyExifTool = "^0.5.6"
-imageio = "^2.34.1"
+imageio = "^2.34"
+gdown = "^5.1.0"
+wget = "^3.2"
 
 
 [build-system]
