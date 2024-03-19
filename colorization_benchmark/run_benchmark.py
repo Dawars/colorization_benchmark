@@ -260,6 +260,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                 save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
                 save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
                 if not markdown_only:
+                    lightning.seed_everything(100)
                     with torch.no_grad():
                         results = colorizer.colorize(source_name, references)
                     color = results["color"]
@@ -306,6 +307,8 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
             # table_line = f"| "
             rows += 1
             for task in row:
+                lightning.seed_everything(100)
+
                 task_dir = output_dir / benchmark_type / method_name / task_name / str(image_id)
                 task_dir.mkdir(exist_ok=True, parents=True)
                 source_name = image_dir / task["source"]
