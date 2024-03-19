@@ -32,7 +32,10 @@ class UniColor(BaseColorizer):
     def get_description(self, benchmark_type: str):
         return "This model generates diverse results where the color is not constrained by the reference image.\n"
 
-    def colorize(self, input_path: Path, reference_paths: List[Path]):
+    def get_paper_link(self):
+        return "https://arxiv.org/abs/2209.11223"
+
+    def colorize(self, input_path: Path, reference_paths: List[Path]) -> dict[str, Image]:
         gray_image = Image.open(input_path).convert("L")
 
         attention = None

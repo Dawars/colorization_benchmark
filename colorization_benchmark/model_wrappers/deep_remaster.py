@@ -60,7 +60,10 @@ class DeepRemaster(BaseColorizer):
 
         return text
 
-    def colorize(self, input_path: Path, reference_paths: List[Path]):
+    def get_paper_link(self):
+        return "https://github.com/satoshiiizuka/siggraphasia2019_remastering"
+
+    def colorize(self, input_path: Path, reference_paths: List[Path]) -> dict[str, Image]:
         # Prepare reference images
         aspect_mean = 0
         minedge_dim = 256
@@ -127,6 +130,23 @@ class DeepRemaster(BaseColorizer):
             output = torch.cat((out_l, out_c), dim=0).numpy().transpose((1, 2, 0))
             output = Image.fromarray(np.uint8(utils.convertLAB2RGB(output) * 255))
             return {"color": output}
+
+    def download_model(self):
+        ckpt_path = (Path(__file__).parent.parent.parent /
+                     "third_party/deepremaster/model/remasternet.pth.tar")
+        md5_sum = "1219f5830e4a7208b1c7ba2f089a16c8"
+        if not ckpt_path.exists():
+            ckpt_path.parent.mkdir(exist_ok=True, parents=True)
+            import wget
+
+            try:
+                wget.download("http://iizuka.cs.tsukuba.ac.jp/data/remasternet.pth.tar",
+                              out=str(ckpt_path.parent))
+            except:
+                print("Download manually from http://web.archive.org/web/20230409124520/http://iizuka.cs.tsukuba.ac.jp/data/remasternet.pth.tar"
+                      f"and place to {ckpt_path}")
+        import hashlib
+        assert hashlib.md5(ckpt_path.read_bytes()).hexdigest() == md5_sum
 
 
 if __name__ == '__main__':

@@ -33,7 +33,10 @@ class PDLNANet(BaseColorizer):
         self.myNet.eval()
         self.opts = opts
 
-    def colorize(self, input_path: Path, reference_paths: List[Path]):
+    def get_paper_link(self):
+        return "https://ieeexplore.ieee.org/abstract/document/10183846"
+
+    def colorize(self, input_path: Path, reference_paths: List[Path]) -> dict[str, Image]:
         gray_image, ref_image = self.image_processing(input_path, reference_paths[0], self.device)
         img3 = self.myNet(gray_image, ref_image)
         color_tensor = gray_replace(gray_image, img3)
