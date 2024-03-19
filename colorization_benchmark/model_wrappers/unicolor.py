@@ -9,8 +9,7 @@ from pathlib import Path
 from typing import List
 import argparse
 
-
-from colorization_benchmark.model_wrappers.base_colorizer import Colorizer
+from colorization_benchmark.model_wrappers.base_colorizer import BaseColorizer
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "third_party/unicolor/sample"))
 sys.path.insert(1, str(Path(__file__).parent.parent.parent / "third_party/unicolor/sample/ImageMatch"))
@@ -20,16 +19,18 @@ from third_party.unicolor.sample.colorizer import Colorizer
 from third_party.unicolor.sample.utils_func import *
 
 
-class UniColor(Colorizer):
-    description = "This model generate diverse results where the color is not constrained by the reference image."
+class UniColor(BaseColorizer):
 
     def __init__(self, model_path: Path, **opts):
-        super(Colorizer).__init__("unicolor")
+        super().__init__("unicolor")
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         self.colorizer = Colorizer(model_path, self.device, [256, 256], load_clip=True, load_warper=True)
 
         self.opts = opts
+
+    def get_description(self, benchmark_type: str):
+        return "This model generates diverse results where the color is not constrained by the reference image.\n"
 
     def colorize(self, input_path: Path, reference_paths: List[Path]):
         gray_image = Image.open(input_path).convert("L")

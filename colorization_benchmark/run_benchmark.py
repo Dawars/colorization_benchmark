@@ -4,10 +4,9 @@ from pathlib import Path
 
 import torch
 import lightning
-from PIL import Image
 from tqdm import tqdm
 
-from colorization_benchmark.model_wrappers.base_colorizer import Colorizer
+from colorization_benchmark.model_wrappers.base_colorizer import BaseColorizer
 # from colorization_benchmark.model_wrappers.deep_remaster import DeepRemaster
 # from colorization_benchmark.model_wrappers.unicolor import UniColor
 from colorization_benchmark.model_wrappers.pdnla_net import PDLNANet
@@ -172,7 +171,7 @@ benchmark_pairs_multi = {
 }
 
 
-def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
+def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
     web_root = output_dir.parent
     benchmark_type = "unconditional"
     method_name = colorizer.method_name
@@ -182,7 +181,7 @@ def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: P
 
     table_md = templating.table_header(method_name, benchmark_type,
                                        ["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"],
-                                       colorizer.description)
+                                       colorizer.get_description(benchmark_type))
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
@@ -210,20 +209,23 @@ def unconditional_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: P
                         if attention:
                             attention.save(save_path_attention, quality=JPG_QUALITY)
 
-                        xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
-                        chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
+                        if colorizer.generate_chromaticity():
+                            xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
+                            chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
 
                     table_line += f"{templating.image_html(save_path_color, web_root)}"
-                    table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
+                    if save_path_chromaticity.exists():
+                        table_line += f"{templating.image_html(save_path_chromaticity, web_root)}"
                     if save_path_attention.exists():
-                        table_line += f"{templating.image_html(save_path_attention, web_root)} |"
+                        table_line += f"{templating.image_html(save_path_attention, web_root)}"
+                    table_line += " | "
                 table_md += table_line + "\n"
 
     table_md += templating.footer(method_name, benchmark_type)
     (experiment_root / "index.md").write_text(table_md)
 
 
-def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
+def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
     web_root = output_dir.parent
     benchmark_type = "single_reference"
     method_name = colorizer.method_name
@@ -233,7 +235,7 @@ def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir
 
     table_md = templating.table_header(method_name, benchmark_type,
                                        ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
-                                       colorizer.description)
+                                       colorizer.get_description(benchmark_type))
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_single.items()):
         image_id = 0
@@ -260,13 +262,16 @@ def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir
                     if attention:
                         attention.save(save_path_attention, quality=JPG_QUALITY)
 
-                    xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
-                    chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
+                    if colorizer.generate_chromaticity():
+                        xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
+                        chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
 
                 table_line += f"{templating.image_html(save_path_color, web_root)}"
-                table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
+                if save_path_chromaticity.exists():
+                    table_line += f"{templating.image_html(save_path_chromaticity, web_root)}"
                 if save_path_attention.exists():
-                    table_line += f"{templating.image_html(save_path_attention, web_root)} |"
+                    table_line += f"{templating.image_html(save_path_attention, web_root)}"
+                table_line += " |"
             if rows > 1:  # don't print ref in first row
                 table_line += f"{templating.image_html(references[0], web_root)} |"
             table_md += table_line + "\n"
@@ -275,7 +280,7 @@ def single_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir
     (experiment_root / "index.md").write_text(table_md)
 
 
-def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
+def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_dir: Path, markdown_only: bool):
     web_root = output_dir.parent
     benchmark_type = "multi_reference"
     method_name = colorizer.method_name
@@ -285,7 +290,7 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
 
     table_md = templating.table_header(method_name, benchmark_type,
                                        ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
-                                       colorizer.description)
+                                       colorizer.get_description(benchmark_type))
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_multi.items()):
@@ -313,12 +318,15 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
                     if attention:
                         attention.save(save_path_attention, quality=JPG_QUALITY)
 
-                    xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
-                    chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
+                    if colorizer.generate_chromaticity():
+                        xy_coordinates = chromaticity.image_to_cie_xy(save_path_color)
+                        chromaticity.plot_xy_coordinates_with_color(xy_coordinates, str(save_path_chromaticity))
 
                 table_line += f"{templating.image_html(save_path_color, web_root)}"
-                table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
-                if save_path_attention.exists():                    table_line += f"{templating.image_html(save_path_attention, web_root)} |"
+                if save_path_chromaticity.exists():
+                    table_line += f"{templating.image_html(save_path_chromaticity, web_root)} |"
+                if save_path_attention.exists():
+                    table_line += f"{templating.image_html(save_path_attention, web_root)} |"
             if rows > 1:  # don't print ref in first row
                 table_line += f"{templating.image_html(references[0], web_root)} |"  # assume same reference in row
             table_md += table_line + "\n"
@@ -327,7 +335,7 @@ def multi_reference_benchmark(colorizer: Colorizer, image_dir: Path, output_dir:
     (experiment_root / "index.md").write_text(table_md)
 
 
-def run_benchmark(colorizer: Colorizer, image_dir: Path, output_dir: Path, unconditional: bool, single_reference: bool,
+def run_benchmark(colorizer: BaseColorizer, image_dir: Path, output_dir: Path, unconditional: bool, single_reference: bool,
                   multi_reference: bool, markdown_only=False):
     if unconditional:
         unconditional_benchmark(colorizer, image_dir, output_dir, markdown_only)

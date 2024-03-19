@@ -20,22 +20,15 @@ from torchvision import transforms
 from PIL import Image
 import numpy as np
 
-from colorization_benchmark.model_wrappers.base_colorizer import Colorizer
+from colorization_benchmark.model_wrappers.base_colorizer import BaseColorizer
 from third_party.deepremaster import utils
 from third_party.deepremaster.model.remasternet import NetworkC
 
 
-class DeepRemaster(Colorizer):
-    description = ("This model is originally designed for film colorization.\n\n"
-                   "To run this benchmark the input image is duplicated 5 times.\n\n"
-                   "The reference images are supposed to be colored frames chosen from the movies.\n\n"
-                   "This means that significant differences in the reference images cannot be used, as illustrated below.\n\n"
-                   "Another interesting finding is that the temporal convolution, responsible for homigenizing the color "
-                   "between conscutive frames, learned to color the sky and trees without reference."
-                   )
+class DeepRemaster(BaseColorizer):
 
     def __init__(self, model_path: Path, **opts):
-        super(Colorizer).__init__("deepremaster")
+        super().__init__("deepremaster")
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         # Load remaster network
@@ -46,6 +39,26 @@ class DeepRemaster(Colorizer):
         self.modelC.eval()
 
         self.opts = opts
+
+    def get_description(self, benchmark_type: str):
+        text = ("This model is originally designed for film colorization.\n"
+                "To run this benchmark the input image is duplicated 5 times.\n"
+                "The reference images are supposed to be colored frames chosen from the movies.\n\n"
+                "This means that significant differences in the reference images cannot be used, as illustrated below.\n")
+        if benchmark_type == "single_reference":
+            text += (
+                "('Recolor source' vs other rows)\n")
+        elif benchmark_type == "multi_reference":
+            text += (
+                "\n\nAn interesting finding is that certain objects are colored even when they don't appear on the refernce images, "
+                "as long as those colors are present in the reference images.\n"
+                "This suggests that instead of semantic to semantic matching between gray and reference image, "
+                "semantic to color correspondence is learned (at least partially).\n"
+                "For example, the sky is colored blue and the leaves green.\n"
+                "The semantic matching takes place in feature space where the spatial information is degraded.\n"
+                "See noise test vs gray test.\n")
+
+        return text
 
     def colorize(self, input_path: Path, reference_paths: List[Path]):
         # Prepare reference images

@@ -12,7 +12,7 @@ import torchvision
 from PIL import Image
 import numpy as np
 
-from colorization_benchmark.model_wrappers.base_colorizer import Colorizer
+from colorization_benchmark.model_wrappers.base_colorizer import BaseColorizer
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "third_party/pdnla_net"))
 
@@ -20,11 +20,10 @@ from third_party.pdnla_net import Network
 from third_party.pdnla_net.colorconvert import *
 
 
-class PDLNANet(Colorizer):
-    description = ""
+class PDLNANet(BaseColorizer):
 
     def __init__(self, model_path: Path, **opts):
-        super(Colorizer).__init__("pdnla_net")
+        super().__init__("pdnla_net")
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         ckpt = torch.load(model_path, map_location=lambda storage, loc: storage)
         ckpt_args = ckpt["args"]
