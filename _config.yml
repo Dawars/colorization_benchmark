@@ -29,11 +29,14 @@ github_username:  dawars
 
 include: ['benchmark']
 
-
 # Build settings
 theme: minima
 plugins:
   - jekyll-feed
+
+timezone: Europe/Budapest
+minima:
+  date_format: "%-d %B %Y %H:%M"
 
 # Exclude from processing.
 # The following items will not be processed, by default.
