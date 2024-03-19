@@ -109,6 +109,15 @@ benchmark_pairs_single = {
         {"source": "fortepan_229825.jpg", "references": ["noise.jpg"]},
         {"source": "fortepan_102400.jpg", "references": ["noise.jpg"]},
     ]],
+    "gray": [[  # check if color is hallucinated
+        {"source": "fortepan_18098.jpg", "references": ["fortepan_18098.jpg"]},
+        {"source": "fortepan_276876.jpg", "references": ["fortepan_276876.jpg"]},
+        {"source": "fortepan_40115.jpg", "references": ["fortepan_40115.jpg"]},
+    ], [
+        {"source": "fortepan_201867.jpg", "references": ["fortepan_201867.jpg"]},
+        {"source": "fortepan_229825.jpg", "references": ["fortepan_229825.jpg"]},
+        {"source": "fortepan_102400.jpg", "references": ["fortepan_102400.jpg"]},
+    ]],
     # "contemporary": [  # contemporary
     #     # {"source": "fortepan_197819.jpg", "references": [".jpg"]},
     # ]
