@@ -3,7 +3,7 @@ title: 'Unicolor: Unconditional'
 layout: default
 tag: unicolor
 category: unconditional
-last_modified_at: '2024-03-19 17:12:12.002132'
+last_modified_at: '2024-03-19 23:11:05.436301'
 ---
 # Unconditional
 ## Unicolor
@@ -37,7 +37,7 @@ This model generates diverse results where the color is not constrained by the r
 
 ### Additional Information
 
-- Last updated: {{ "2024-03-19 17:12:12" | date: site.minima.date_format }}
+- Last updated: {{ "2024-03-19 23:11:05" | date: site.minima.date_format }}
 - GPU info: NVIDIA GeForce GTX 1080 Ti 11 GB, Compute Capability 6.1
 - CUDA version: 11.8
 - PyTorch version: 2.2.1
