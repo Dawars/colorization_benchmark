@@ -280,7 +280,9 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                     table_line += f"{templating.image_html(save_path_attention, web_root)}"
                 table_line += " |"
             if rows > 1:  # don't print ref in first row
-                table_line += f"{templating.image_html(references[0], web_root)} |"
+                reference_chromaticity_path = references[0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
+                table_line += (f"{templating.image_html(references[0], web_root)}"
+                               f"{templating.image_html(reference_chromaticity_path, web_root)} |")
             table_md += table_line + "\n"
 
     table_md += templating.footer(method_name, benchmark_type, colorizer)
@@ -337,7 +339,9 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
                 if save_path_attention.exists():
                     table_line += f"{templating.image_html(save_path_attention, web_root)} |"
             if rows > 1:  # don't print ref in first row
-                table_line += f"{templating.image_html(references[0], web_root)} |"  # assume same reference in row
+                reference_chromaticity_path = references[0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
+                table_line += (f"{templating.image_html(references[0], web_root)}"
+                               f"{templating.image_html(reference_chromaticity_path, web_root)} |")
             table_md += table_line + "\n"
 
     table_md += templating.footer(method_name, benchmark_type, colorizer)
