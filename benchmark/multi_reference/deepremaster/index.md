@@ -3,19 +3,24 @@ title: 'Deepremaster: Multi reference'
 layout: default
 tag: deepremaster
 category: multi_reference
+last_modified_at: '2024-03-19 16:00:27.259599'
 ---
 # Multi reference
 ## Deepremaster
 
 This model is originally designed for film colorization.
-
 To run this benchmark the input image is duplicated 5 times.
-
 The reference images are supposed to be colored frames chosen from the movies.
 
 This means that significant differences in the reference images cannot be used, as illustrated below.
 
-Another interesting finding is that the temporal convolution, responsible for homigenizing the color between conscutive frames, learned to color the sky and trees without reference.
+
+An interesting finding is that certain objects are colored even when they don't appear on the refernce images, as long as those colors are present in the reference images.
+This suggests that instead of semantic to semantic matching between gray and reference image, semantic to color correspondence is learned (at least partially).
+For example, the sky is colored blue and the leaves green.
+The semantic matching takes place in feature space where the spatial information is degraded.
+See noise test vs gray test.
+
 
 |  Task | Image #1 | Image #2 | Image #3 | Reference |
 |  ----- | ----- | ----- | ----- | ----- |
@@ -25,6 +30,12 @@ Another interesting finding is that the temporal convolution, responsible for ho
 | Semantic correspondence strong | <img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_strong/0/fortepan_251148_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_strong/0/fortepan_251148_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_strong/1/fortepan_97196_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_strong/1/fortepan_97196_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_strong/2/fortepan_97191_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_strong/2/fortepan_97191_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/fortepan_183722.jpg' | relative_url }}" width="200"/> |
 | Semantic correspondence weak | <img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_weak/0/fortepan_148611_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_weak/0/fortepan_148611_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_weak/1/fortepan_84203_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_weak/1/fortepan_84203_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_weak/2/fortepan_84203_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/semantic_correspondence_weak/2/fortepan_84203_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/fortepan_183722.jpg' | relative_url }}" width="200"/> |
 | Distractors | <img src="{{'/benchmark/multi_reference/deepremaster/distractors/0/fortepan_18098_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/distractors/0/fortepan_18098_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/multi_reference/deepremaster/distractors/1/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/distractors/1/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/multi_reference/deepremaster/distractors/2/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/multi_reference/deepremaster/distractors/2/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/fortepan_183722.jpg' | relative_url }}" width="200"/> |
+
+### Additional Information
+
+- Last updated: {{ "2024-03-19 16:01:17" | date: site.minima.date_format }}
+- Paper: [https://github.com/satoshiiizuka/siggraphasia2019_remastering]()
+
 
 ### Other categories:
 

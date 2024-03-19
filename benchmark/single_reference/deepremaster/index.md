@@ -3,19 +3,18 @@ title: 'Deepremaster: Single reference'
 layout: default
 tag: deepremaster
 category: single_reference
+last_modified_at: '2024-03-19 15:58:21.484082'
 ---
 # Single reference
 ## Deepremaster
 
 This model is originally designed for film colorization.
-
 To run this benchmark the input image is duplicated 5 times.
-
 The reference images are supposed to be colored frames chosen from the movies.
 
 This means that significant differences in the reference images cannot be used, as illustrated below.
+('Recolor source' vs other rows)
 
-Another interesting finding is that the temporal convolution, responsible for homigenizing the color between conscutive frames, learned to color the sky and trees without reference.
 
 |  Task | Image #1 | Image #2 | Image #3 | Reference |
 |  ----- | ----- | ----- | ----- | ----- |
@@ -33,6 +32,14 @@ Another interesting finding is that the temporal convolution, responsible for ho
 | Distractors | <img src="{{'/benchmark/single_reference/deepremaster/distractors/0/fortepan_18098_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/distractors/0/fortepan_18098_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/distractors/1/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/distractors/1/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/distractors/2/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/distractors/2/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/fortepan_251236.jpg' | relative_url }}" width="200"/> |
 | Random noise | <img src="{{'/benchmark/single_reference/deepremaster/random_noise/0/fortepan_18098_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/random_noise/0/fortepan_18098_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/random_noise/1/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/random_noise/1/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/random_noise/2/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/random_noise/2/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/noise.jpg' | relative_url }}" width="200"/> |
 | Random noise | <img src="{{'/benchmark/single_reference/deepremaster/random_noise/3/fortepan_201867_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/random_noise/3/fortepan_201867_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/random_noise/4/fortepan_229825_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/random_noise/4/fortepan_229825_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/random_noise/5/fortepan_102400_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/random_noise/5/fortepan_102400_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/noise.jpg' | relative_url }}" width="200"/> |
+| Gray | <img src="{{'/benchmark/single_reference/deepremaster/gray/0/fortepan_18098_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/gray/0/fortepan_18098_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/gray/1/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/gray/1/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/gray/2/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/gray/2/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/fortepan_40115.jpg' | relative_url }}" width="200"/> |
+| Gray | <img src="{{'/benchmark/single_reference/deepremaster/gray/3/fortepan_201867_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/gray/3/fortepan_201867_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/gray/4/fortepan_229825_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/gray/4/fortepan_229825_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/single_reference/deepremaster/gray/5/fortepan_102400_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/single_reference/deepremaster/gray/5/fortepan_102400_chromaticity.jpg' | relative_url }}" width="200"/> |<img src="{{'/benchmark/input/fortepan_102400.jpg' | relative_url }}" width="200"/> |
+
+### Additional Information
+
+- Last updated: {{ "2024-03-19 16:00:27" | date: site.minima.date_format }}
+- Paper: [https://github.com/satoshiiizuka/siggraphasia2019_remastering]()
+
 
 ### Other categories:
 

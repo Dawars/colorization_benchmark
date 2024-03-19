@@ -3,11 +3,14 @@ title: 'Unicolor: Unconditional'
 layout: default
 tag: unicolor
 category: unconditional
+date: '2024-03-19 15:41:57.893350'
+last_modified_at: '2024-03-19 15:41:57.893356'
 ---
 # Unconditional
 ## Unicolor
 
-This model generate diverse results where the color is not constrained by the reference image.
+This model generates diverse results where the color is not constrained by the reference image.
+
 
 |  Image #1 | Image #2 | Image #3 | Image #4 | Image #5 |
 |  ----- | ----- | ----- | ----- | ----- |
@@ -30,6 +33,12 @@ This model generate diverse results where the color is not constrained by the re
 | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/80/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/80/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/81/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/81/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/82/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/82/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/83/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/83/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/84/fortepan_276876_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/84/fortepan_276876_chromaticity.jpg' | relative_url }}" width="200"/> | 
 | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/85/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/85/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/86/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/86/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/87/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/87/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/88/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/88/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/89/fortepan_40115_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/89/fortepan_40115_chromaticity.jpg' | relative_url }}" width="200"/> | 
 | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/90/fortepan_197819_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/90/fortepan_197819_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/91/fortepan_197819_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/91/fortepan_197819_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/92/fortepan_197819_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/92/fortepan_197819_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/93/fortepan_197819_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/93/fortepan_197819_chromaticity.jpg' | relative_url }}" width="200"/> | <img src="{{'/benchmark/unconditional/unicolor/recolor_source/94/fortepan_197819_color.jpg' | relative_url }}" width="200"/><img src="{{'/benchmark/unconditional/unicolor/recolor_source/94/fortepan_197819_chromaticity.jpg' | relative_url }}" width="200"/> | 
+
+### Additional Information
+
+- Last updated: {{ "2024-03-19 15:41:57" | date: site.minima.date_format }}
+- Paper: [https://arxiv.org/abs/2209.11223]()
+
 
 ### Other categories:
 
