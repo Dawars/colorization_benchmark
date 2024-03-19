@@ -3,10 +3,12 @@ title: 'Deepremaster: Single reference'
 layout: default
 tag: deepremaster
 category: single_reference
-last_modified_at: '2024-03-19 15:58:21.484082'
+last_modified_at: '2024-03-19 17:12:03.363970'
 ---
 # Single reference
 ## Deepremaster
+
+Paper: [https://github.com/satoshiiizuka/siggraphasia2019_remastering]()
 
 This model is originally designed for film colorization.
 To run this benchmark the input image is duplicated 5 times.
@@ -37,11 +39,12 @@ This means that significant differences in the reference images cannot be used, 
 
 ### Additional Information
 
-- Last updated: {{ "2024-03-19 16:00:27" | date: site.minima.date_format }}
-- Paper: [https://github.com/satoshiiizuka/siggraphasia2019_remastering]()
+- Last updated: {{ "2024-03-19 17:12:03" | date: site.minima.date_format }}
+- GPU info: NVIDIA GeForce GTX 1080 Ti 11 GB, Compute Capability 6.1
+- CUDA version: 11.8
+- PyTorch version: 2.2.1
 
-
-### Other categories:
+### Other Categories:
 
 {% for p in site.pages %}
 {% if p.tag == "deepremaster" and p.url != page.url %}

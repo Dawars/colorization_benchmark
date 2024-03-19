@@ -3,10 +3,12 @@ title: 'Pdnla net: Single reference'
 layout: default
 tag: pdnla_net
 category: single_reference
-last_modified_at: '2024-03-19 16:01:18.739274'
+last_modified_at: '2024-03-19 17:13:35.576584'
 ---
 # Single reference
 ## Pdnla net
+
+Paper: [https://ieeexplore.ieee.org/abstract/document/10183846]()
 
 
 
@@ -31,11 +33,12 @@ last_modified_at: '2024-03-19 16:01:18.739274'
 
 ### Additional Information
 
-- Last updated: {{ "2024-03-19 16:04:12" | date: site.minima.date_format }}
-- Paper: [https://ieeexplore.ieee.org/abstract/document/10183846]()
+- Last updated: {{ "2024-03-19 17:13:35" | date: site.minima.date_format }}
+- GPU info: NVIDIA GeForce GTX 1080 Ti 11 GB, Compute Capability 6.1
+- CUDA version: 11.8
+- PyTorch version: 2.2.1
 
-
-### Other categories:
+### Other Categories:
 
 {% for p in site.pages %}
 {% if p.tag == "pdnla_net" and p.url != page.url %}

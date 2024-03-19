@@ -3,10 +3,12 @@ title: 'Unicolor: Single reference'
 layout: default
 tag: unicolor
 category: single_reference
-last_modified_at: '2024-03-19 16:04:20.252565'
+last_modified_at: '2024-03-19 17:12:11.990460'
 ---
 # Single reference
 ## Unicolor
+
+Paper: [https://arxiv.org/abs/2209.11223]()
 
 This model generates diverse results where the color is not constrained by the reference image.
 
@@ -32,11 +34,12 @@ This model generates diverse results where the color is not constrained by the r
 
 ### Additional Information
 
-- Last updated: {{ "2024-03-19 16:26:06" | date: site.minima.date_format }}
-- Paper: [https://arxiv.org/abs/2209.11223]()
+- Last updated: {{ "2024-03-19 17:12:12" | date: site.minima.date_format }}
+- GPU info: NVIDIA GeForce GTX 1080 Ti 11 GB, Compute Capability 6.1
+- CUDA version: 11.8
+- PyTorch version: 2.2.1
 
-
-### Other categories:
+### Other Categories:
 
 {% for p in site.pages %}
 {% if p.tag == "unicolor" and p.url != page.url %}
