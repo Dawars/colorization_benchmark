@@ -7,9 +7,6 @@ import lightning
 from tqdm import tqdm
 
 from colorization_benchmark.model_wrappers.base_colorizer import BaseColorizer
-# from colorization_benchmark.model_wrappers.deep_remaster import DeepRemaster
-# from colorization_benchmark.model_wrappers.unicolor import UniColor
-from colorization_benchmark.model_wrappers.pdnla_net import PDLNANet
 from colorization_benchmark.utils import chromaticity
 from colorization_benchmark.utils import templating
 
@@ -190,7 +187,7 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
 
     table_md = templating.table_header(method_name, benchmark_type,
                                        ["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"],
-                                       colorizer.get_description(benchmark_type))
+                                       colorizer)
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
@@ -230,7 +227,7 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
                     table_line += " | "
                 table_md += table_line + "\n"
 
-    table_md += templating.footer(method_name, benchmark_type)
+    table_md += templating.footer(method_name, benchmark_type, colorizer)
     (experiment_root / "index.md").write_text(table_md)
 
 
@@ -244,7 +241,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
 
     table_md = templating.table_header(method_name, benchmark_type,
                                        ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
-                                       colorizer.get_description(benchmark_type))
+                                       colorizer)
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_single.items()):
         image_id = 0
@@ -285,7 +282,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                 table_line += f"{templating.image_html(references[0], web_root)} |"
             table_md += table_line + "\n"
 
-    table_md += templating.footer(method_name, benchmark_type)
+    table_md += templating.footer(method_name, benchmark_type, colorizer)
     (experiment_root / "index.md").write_text(table_md)
 
 
@@ -299,7 +296,7 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
 
     table_md = templating.table_header(method_name, benchmark_type,
                                        ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
-                                       colorizer.get_description(benchmark_type))
+                                       colorizer)
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_multi.items()):
@@ -340,7 +337,7 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
                 table_line += f"{templating.image_html(references[0], web_root)} |"  # assume same reference in row
             table_md += table_line + "\n"
 
-    table_md += templating.footer(method_name, benchmark_type)
+    table_md += templating.footer(method_name, benchmark_type, colorizer)
     (experiment_root / "index.md").write_text(table_md)
 
 
@@ -365,10 +362,18 @@ if __name__ == '__main__':
 
     markdown_only = False
 
-    model_path = "../third_party/deepremaster/model/remasternet.pth.tar"
+    from colorization_benchmark.model_wrappers.deep_remaster import DeepRemaster
+    model_path = Path("../third_party/deepremaster/model/remasternet.pth.tar")
     colorizer = DeepRemaster(model_path, mindim=320)
     run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=markdown_only)
 
-    model_path = "../third_party/pdnla_net/model_1_ema.pt"
+    from colorization_benchmark.model_wrappers.unicolor import UniColor
+    model_path = Path("../third_party/unicolor/framework/checkpoints/unicolor_mscoco/mscoco_step259999")
+    colorizer = UniColor(model_path)
+    run_benchmark(colorizer, image_dir, output_dir, False, True, False, markdown_only=markdown_only)
+    # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
+
+    from colorization_benchmark.model_wrappers.pdnla_net import PDLNANet
+    model_path = Path("../third_party/pdnla_net/model_1_ema.pt")
     colorizer = PDLNANet(model_path)
     run_benchmark(colorizer, image_dir, output_dir, False, True, False, markdown_only=markdown_only)

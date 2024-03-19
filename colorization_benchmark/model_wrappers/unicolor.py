@@ -25,7 +25,7 @@ class UniColor(BaseColorizer):
         super().__init__("unicolor")
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-        self.colorizer = Colorizer(model_path, self.device, [256, 256], load_clip=True, load_warper=True)
+        self.colorizer = Colorizer(str(model_path), self.device, [256, 256], load_clip=True, load_warper=True)
 
         self.opts = opts
 
