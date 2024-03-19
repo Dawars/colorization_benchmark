@@ -21,11 +21,10 @@ from third_party.pdnla_net.colorconvert import *
 
 
 class PDLNANet(Colorizer):
-    method_name = "pdnla_net"
     description = ""
 
     def __init__(self, model_path: Path, **opts):
-        super(Colorizer).__init__()
+        super(Colorizer).__init__("pdnla_net")
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         ckpt = torch.load(model_path, map_location=lambda storage, loc: storage)
         ckpt_args = ckpt["args"]

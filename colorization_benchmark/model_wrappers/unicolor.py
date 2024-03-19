@@ -10,7 +10,7 @@ from typing import List
 import argparse
 
 
-from colorization_benchmark.base_colorizer import Colorizer
+from colorization_benchmark.model_wrappers.base_colorizer import Colorizer
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "third_party/unicolor/sample"))
 sys.path.insert(1, str(Path(__file__).parent.parent.parent / "third_party/unicolor/sample/ImageMatch"))
@@ -21,11 +21,10 @@ from third_party.unicolor.sample.utils_func import *
 
 
 class UniColor(Colorizer):
-    method_name = "unicolor"
     description = "This model generate diverse results where the color is not constrained by the reference image."
 
     def __init__(self, model_path: Path, **opts):
-        super(Colorizer).__init__()
+        super(Colorizer).__init__("unicolor")
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         self.colorizer = Colorizer(model_path, self.device, [256, 256], load_clip=True, load_warper=True)

@@ -20,13 +20,12 @@ from torchvision import transforms
 from PIL import Image
 import numpy as np
 
-from colorization_benchmark.base_colorizer import Colorizer
+from colorization_benchmark.model_wrappers.base_colorizer import Colorizer
 from third_party.deepremaster import utils
 from third_party.deepremaster.model.remasternet import NetworkC
 
 
 class DeepRemaster(Colorizer):
-    method_name = "deepremaster"
     description = ("This model is originally designed for film colorization.\n\n"
                    "To run this benchmark the input image is duplicated 5 times.\n\n"
                    "The reference images are supposed to be colored frames chosen from the movies.\n\n"
@@ -36,7 +35,7 @@ class DeepRemaster(Colorizer):
                    )
 
     def __init__(self, model_path: Path, **opts):
-        super(Colorizer).__init__()
+        super(Colorizer).__init__("deepremaster")
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         # Load remaster network
