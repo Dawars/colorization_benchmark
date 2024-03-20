@@ -187,6 +187,8 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
     web_root = output_dir.parent
     benchmark_type = "unconditional"
     method_name = colorizer.method_name
+    print(benchmark_type, method_name)
+
     experiment_root = output_dir / benchmark_type / method_name  # save table here
     if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
         [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
@@ -196,6 +198,7 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
+        print(task_name)
         image_id = 0
         for row in tasks:
             for task in row:
@@ -242,6 +245,8 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
     web_root = output_dir.parent
     benchmark_type = "single_reference"
     method_name = colorizer.method_name
+    print(benchmark_type, method_name)
+
     experiment_root = output_dir / benchmark_type / method_name  # save table here
     if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
         [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
@@ -250,6 +255,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
     table_md += templating.table_header(["Task", "Image #1", "Image #2", "Image #3", "Image #4"])
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_single.items()):
+        print(task_name)
         image_id = 0
         for row in tasks:
             if rows == 2:
@@ -303,6 +309,8 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
     web_root = output_dir.parent
     benchmark_type = "multi_reference"
     method_name = colorizer.method_name
+    print(benchmark_type, method_name)
+
     experiment_root = output_dir / benchmark_type / method_name  # save table here
     if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
         [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
@@ -312,6 +320,7 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_multi.items()):
+        print(task_name)
         image_id = 0
         for row in tasks:
             if rows == 1:
