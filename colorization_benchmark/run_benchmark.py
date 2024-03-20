@@ -204,7 +204,7 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
                     image_id += 1
                     save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
                     save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
-                    save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
+                    save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"
                     if not markdown_only:
                         with torch.no_grad():
                             results = colorizer.colorize(source_name, None)
@@ -260,7 +260,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                 image_id += 1
                 save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
                 save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
-                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
+                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"
                 if not markdown_only:
                     lightning.seed_everything(100)
                     with torch.no_grad():
@@ -283,7 +283,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                 table_line += " |"
             if rows > 1:  # don't print ref in first row
                 reference_chromaticity_path = references[
-                                                  0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
+                                                  0].parent / f"{references[0].with_suffix('').name}_chromaticity.png"
                 table_line += (f"{templating.image_html(references[0], web_root)}"
                                f"{templating.image_html(reference_chromaticity_path, web_root)} |")
             table_md += table_line + "\n"
@@ -323,7 +323,7 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
 
                 image_id += 1
                 save_path_color = task_dir / f"{source_name.with_suffix('').name}_color.jpg"
-                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.jpg"
+                save_path_chromaticity = task_dir / f"{source_name.with_suffix('').name}_chromaticity.png"
                 save_path_attention = task_dir / f"{source_name.with_suffix('').name}_attention.jpg"
                 if not markdown_only:
                     with torch.no_grad():
@@ -345,7 +345,7 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
                     table_line += f"{templating.image_html(save_path_attention, web_root)} |"
             if rows > 1:  # don't print ref in first row
                 reference_chromaticity_path = references[
-                                                  0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
+                                                  0].parent / f"{references[0].with_suffix('').name}_chromaticity.png"
                 table_line += (f"{templating.image_html(references[0], web_root)}"
                                f"{templating.image_html(reference_chromaticity_path, web_root)} |")
             table_md += table_line + "\n"
