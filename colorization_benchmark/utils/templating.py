@@ -11,32 +11,34 @@ def pretty_print(text: str):
 
 
 def image_html(src: Path, web_root: Path, width: int = 200):
-    return '<img src="{{\'/' + str(src.relative_to(web_root)) + '\' | relative_url }}" width="200"/>'
+    return f'![]({{{{ "{str(src.relative_to(web_root))}" | relative_url }}}}){{: width="200px"}}'
 
 
-def table_header(method_name: str, benchmark_type: str, headers: list[str], colorizer: BaseColorizer):
-    header = "| "
-    header2 = "| "
-    for name in headers:
-        header += f" {name} |"
-        header2 += f" ----- |"
+def page_header(method_name: str, benchmark_type: str, colorizer: BaseColorizer):
     return f"""---
 title: '{pretty_print(method_name)}: {pretty_print(benchmark_type)}'
 layout: default
 tag: {method_name}
 category: {benchmark_type}
-last_modified_at: '{datetime.datetime.utcnow()}'
+last_modified_at: "{datetime.datetime.utcnow()}"
 ---
 # {pretty_print(benchmark_type)}
 ## {pretty_print(method_name)}
 
-Paper: [{colorizer.get_paper_link()}]()
+Paper: <{{{{ "{colorizer.get_paper_link()}" | uri_escape  }}}}>{{:target="_blank"}}
 
 {colorizer.get_description(benchmark_type)}
 
-{header}
-{header2}
 """
+
+
+def table_header(headers: list[str]):
+    header = "| "
+    header2 = "| "
+    for name in headers:
+        header += f" {name} |"
+        header2 += f" ----- |"
+    return f"{header}\n{header2}\n"
 
 
 def get_gpu_info():
@@ -51,21 +53,27 @@ def get_gpu_info():
     return gpu_info
 
 
+def get_experiment_info():
+    return f"""
+- Last updated: {{{{ "{str(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))}" | date: site.minima.date_format }}}}
+- GPU info: {get_gpu_info()}
+- CUDA version:  {torch.version.cuda}
+- PyTorch version: {torch.__version__}
+
+"""
+
+
 def footer(method_name: str, benchmark_type: str, colorizer: BaseColorizer):
-    gpu_info = get_gpu_info()
-    return '''
+    return f"""
 ### Additional Information
 
-- Last updated: {{ "''' + str(datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")) + '''" | date: site.minima.date_format }}
-- GPU info: ''' + f"{gpu_info}" + '''
-- CUDA version: ''' + f"{torch.version.cuda}" + '''
-- PyTorch version: ''' + f"{torch.__version__}" + '''
+{{% include_relative footer.md %}}
 
 ### Other Categories:
 
-{% for p in site.pages %}
-{% if p.tag == "''' + method_name + '''" and p.url != page.url %}
-- [{{ p.title }}]({{ p.url | relative_url }})
-{% endif %}
-{% endfor %}
-'''
+{{% for p in site.pages %}}
+{{% if p.tag == "{method_name}" and p.url != page.url %}}
+- [{{{{p.title}}}}]({{{{p.url | relative_url}}}})
+{{% endif %}}
+{{% endfor %}}
+"""

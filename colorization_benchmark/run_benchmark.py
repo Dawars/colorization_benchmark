@@ -182,12 +182,11 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
     benchmark_type = "unconditional"
     method_name = colorizer.method_name
     experiment_root = output_dir / benchmark_type / method_name  # save table here
-    if not markdown_only and experiment_root.exists(): (
-        shutil.rmtree(experiment_root))
+    if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
+        [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
 
-    table_md = templating.table_header(method_name, benchmark_type,
-                                       ["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"],
-                                       colorizer)
+    table_md = templating.page_header(method_name, benchmark_type, colorizer)
+    table_md += templating.table_header(["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"])
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
@@ -228,6 +227,8 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
                 table_md += table_line + "\n"
 
     table_md += templating.footer(method_name, benchmark_type, colorizer)
+    if not markdown_only:
+        (experiment_root / "footer.md").write_text(templating.get_experiment_info())
     (experiment_root / "index.md").write_text(table_md)
 
 
@@ -236,18 +237,19 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
     benchmark_type = "single_reference"
     method_name = colorizer.method_name
     experiment_root = output_dir / benchmark_type / method_name  # save table here
-    if not markdown_only and experiment_root.exists(): (
-        shutil.rmtree(experiment_root))
+    if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
+        [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
 
-    table_md = templating.table_header(method_name, benchmark_type,
-                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
-                                       colorizer)
+    table_md = templating.page_header(method_name, benchmark_type, colorizer)
+    table_md += templating.table_header(["Task", "Image #1", "Image #2", "Image #3", "Image #4"])
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_single.items()):
         image_id = 0
         for row in tasks:
+            if rows == 1:
+                table_md += templating.table_header(["Task", "Image #1", "Image #2", "Image #3", "Reference"])
+
             table_line = f'| {templating.pretty_print(task_name)} | '
-            # table_line = f"| "
             rows += 1
             for task in row:
                 task_dir = output_dir / benchmark_type / method_name / task_name / str(image_id)
@@ -280,12 +282,14 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                     table_line += f"{templating.image_html(save_path_attention, web_root)}"
                 table_line += " |"
             if rows > 1:  # don't print ref in first row
-                reference_chromaticity_path = references[0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
+                reference_chromaticity_path = references[
+                                                  0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
                 table_line += (f"{templating.image_html(references[0], web_root)}"
                                f"{templating.image_html(reference_chromaticity_path, web_root)} |")
             table_md += table_line + "\n"
-
     table_md += templating.footer(method_name, benchmark_type, colorizer)
+    if not markdown_only:
+        (experiment_root / "footer.md").write_text(templating.get_experiment_info())
     (experiment_root / "index.md").write_text(table_md)
 
 
@@ -294,19 +298,20 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
     benchmark_type = "multi_reference"
     method_name = colorizer.method_name
     experiment_root = output_dir / benchmark_type / method_name  # save table here
-    if not markdown_only and experiment_root.exists(): (
-        shutil.rmtree(experiment_root))
+    if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
+        [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
 
-    table_md = templating.table_header(method_name, benchmark_type,
-                                       ["Task", "Image #1", "Image #2", "Image #3", "Reference"],
-                                       colorizer)
+    table_md = templating.page_header(method_name, benchmark_type, colorizer)
+    table_md += templating.table_header(["Task", "Image #1", "Image #2", "Image #3", "Reference"])
 
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_multi.items()):
         image_id = 0
         for row in tasks:
+            if rows == 1:
+                table_md += templating.table_header(["Task", "Image #1", "Image #2", "Image #3", "Reference"])
+
             table_line = f'| {templating.pretty_print(task_name)} | '
-            # table_line = f"| "
             rows += 1
             for task in row:
                 lightning.seed_everything(100)
@@ -339,17 +344,20 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
                 if save_path_attention.exists():
                     table_line += f"{templating.image_html(save_path_attention, web_root)} |"
             if rows > 1:  # don't print ref in first row
-                reference_chromaticity_path = references[0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
+                reference_chromaticity_path = references[
+                                                  0].parent / f"{references[0].with_suffix('').name}_chromaticity.jpg"
                 table_line += (f"{templating.image_html(references[0], web_root)}"
                                f"{templating.image_html(reference_chromaticity_path, web_root)} |")
             table_md += table_line + "\n"
 
     table_md += templating.footer(method_name, benchmark_type, colorizer)
+    if not markdown_only:
+        (experiment_root / "footer.md").write_text(templating.get_experiment_info())
     (experiment_root / "index.md").write_text(table_md)
 
 
-def run_benchmark(colorizer: BaseColorizer, image_dir: Path, output_dir: Path, unconditional: bool, single_reference: bool,
-                  multi_reference: bool, markdown_only=False):
+def run_benchmark(colorizer: BaseColorizer, image_dir: Path, output_dir: Path, unconditional: bool,
+                  single_reference: bool, multi_reference: bool, markdown_only=False):
     if unconditional:
         unconditional_benchmark(colorizer, image_dir, output_dir, markdown_only)
     if single_reference:
