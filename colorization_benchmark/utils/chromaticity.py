@@ -200,11 +200,11 @@ class ICCProfile:
                             map(float, et.execute(*['-icc_profile:BlueMatrixColumn', '-b', self.icc_path]).split(' ')))
                         self._matrix = np.vstack([red_column, green_column, blue_column]).transpose()
                         self._matrix_missing = False
-                        print(f'using {self._matrix} for RGB to XYZ')
+                        # print(f'using {self._matrix} for RGB to XYZ')
                     else:
                         self._matrix = colour.models.rgb.RGB_COLOURSPACE_sRGB.matrix_RGB_to_XYZ
                         self._matrix_missing = True
-                        print(f'profile matrix not found, using sRGB matrix instead')
+                        # print(f'profile matrix not found, using sRGB matrix instead')
             else:
                 self._matrix = colour.models.rgb.RGB_COLOURSPACE_sRGB.matrix_RGB_to_XYZ
                 self._matrix_missing = True
@@ -223,13 +223,13 @@ class ICCProfile:
                     if cat_string:
                         cat = list(map(float, cat_string.split(' ')))
                         self._cat = np.vstack([cat[0:3], cat[3:6], cat[6:9]])
-                        print(f"using {self._cat} for chromatic adaptation")
+                        # print(f"using {self._cat} for chromatic adaptation")
                     else:
                         self._cat = None
-                        print(f"chromatic adaptation matrix missing, not performing transformation")
+                        # print(f"chromatic adaptation matrix missing, not performing transformation")
             else:
                 self._cat = None
-                print(f"icc profile missing, not performing transformation")
+                # print(f"icc profile missing, not performing transformation")
         return self._cat
 
     def get_pcs_illuminant(self) -> np.ndarray:
@@ -243,15 +243,15 @@ class ICCProfile:
                     pcs_illuminant = et.execute(*['-icc_profile:ConnectionSpaceIlluminant', '-b', self.icc_path])
                     if pcs_illuminant:
                         self._pcs_illuminant_XYZ = list(map(float, pcs_illuminant.split(' ')))
-                        print(f"extracted PCS illuminant {self._pcs_illuminant_XYZ}")
+                        # print(f"extracted PCS illuminant {self._pcs_illuminant_XYZ}")
                     else:
                         # use D65 when no matrix is defined, otherwise use D50
                         if self._matrix_missing:
                             self._pcs_illuminant_XYZ = colour.xyY_to_XYZ(np.array([0.31271, 0.32902, 1]))
-                            print(f"using default illuminant D65")
+                            # print(f"using default illuminant D65")
                         else:
                             self._pcs_illuminant_XYZ = colour.xyY_to_XYZ(np.array([0.34567, 0.35850, 1]))
-                            print(f"matrix found but no PCS illuminant is present, using D50")
+                            # print(f"matrix found but no PCS illuminant is present, using D50")
             else:
                 self._pcs_illuminant_XYZ = colour.xyY_to_XYZ(np.array([0.31271, 0.32902, 1]))
         return self._pcs_illuminant_XYZ
@@ -267,7 +267,7 @@ class ICCProfile:
                 self.get_pcs_illuminant(),  # use PCS white point
                 colour.xyY_to_XYZ(np.array([0.31271, 0.32902, 1])),  # D65 in 2-degree observer
                 transform='Bradford')
-        print(f'using {self._pcs_illuminant_conversion_matrix} for chromatic adaptation to D65')
+        # print(f'using {self._pcs_illuminant_conversion_matrix} for chromatic adaptation to D65')
         return self._pcs_illuminant_conversion_matrix
 
     def get_profile_description(self) -> str:
@@ -312,7 +312,7 @@ class CurveConversion(ConversionFunction):
         """
         n = len(self.matrix)
         # np.interp does not check for out of range values, so we need to do it manually
-        print(f'using matrix {self.matrix} for TRC curve conversion')
+        # print(f'using matrix {self.matrix} for TRC curve conversion')
         if np.min(pixels) < 0 or np.max(pixels) > 1:
             raise ValueError(f'pixels should be in range [0, 1], got {np.min(pixels)} and {np.max(pixels)}')
         result_array = np.interp(pixels, np.linspace(0, 1, n), self.matrix)
@@ -329,7 +329,7 @@ class GammaConversion(ConversionFunction):
         self.gamma = gamma
 
     def convert_trc(self, pixels: np.ndarray) -> np.ndarray:
-        print(f'using gamma {self.gamma} for TRC conversion')
+        # print(f'using gamma {self.gamma} for TRC conversion')
         if self.gamma != 1:
             return pixels ** self.gamma
         else:
@@ -354,7 +354,7 @@ class ParametricConversion(ConversionFunction):
         > Any function value outside the range shall be clipped to the range of the function.
         Therefore, we do the clipping before returning.
         """
-        print(f'using type {self.curve_type} and params {self.params} for TRC parametric curve conversion')
+        # print(f'using type {self.curve_type} and params {self.params} for TRC parametric curve conversion')
         if self.curve_type == 0:
             return GammaConversion(gamma=self.params[0].astype(float)).convert_trc(pixels)
         elif self.curve_type == 1:
@@ -406,7 +406,7 @@ def plot_xy_coordinates_with_color(xy_array, output_path: Path | str):
     # plot
     plt.style.use('dark_background')
     fig, ax = plt.subplots(figsize=(8, 9))
-    ax.set_title('CIE 1931 Chromaticity Diagram')
+    # ax.set_title('CIE 1931 Chromaticity Diagram')
     # draw horseshoe
     horseshoe_patch = PathPatch(horseshoe_path, facecolor='none', edgecolor='#DDDDDD', linewidth=0.5)
     ax.add_patch(horseshoe_patch)
@@ -415,8 +415,8 @@ def plot_xy_coordinates_with_color(xy_array, output_path: Path | str):
     # setup axes
     ax.set_xlim(0, 0.8)
     ax.set_ylim(0, 0.9)
-    ax.xaxis.set_ticks(np.arange(0, 0.9, 0.1))
-    ax.yaxis.set_ticks(np.arange(0, 1.0, 0.1))
+    # ax.xaxis.set_ticks(np.arange(0, 0.9, 0.1))
+    # ax.yaxis.set_ticks(np.arange(0, 1.0, 0.1))
     # draw white point and annotation
     ax.scatter(0.3127, 0.3290, color='#DDDDDD', s=5, edgecolors=None, linewidths=0)
     ax.scatter(0.3127, 0.3290, color=(0, 0, 0, 0), s=20, edgecolors='#DDDDDD', linewidths=0.5)
@@ -425,7 +425,7 @@ def plot_xy_coordinates_with_color(xy_array, output_path: Path | str):
     ax.scatter(0.3457, 0.3585, color=(0, 0, 0, 0), s=20, edgecolors='#DDDDDD', linewidths=0.5)
     ax.text(0.353, 0.365, 'D50', color='#DDDDDD', fontsize=6, ha='center', va='center')
 
-    plt.savefig(output_path, format=output_path.suffix[1:], dpi=500, facecolor='#000000')
+    plt.savefig(output_path, format=output_path.suffix[1:], dpi=75, facecolor='#000000')
     plt.close()
     # print('Drawing Chromaticity Diagram spent: {:.2f} seconds'.format(time.time() - start_time))
 
@@ -437,19 +437,18 @@ def image_to_cie_xy(image_path) -> np.ndarray:
         img = iio.imread(image_path)
     except FileNotFoundError:
         print("file not found!")
-        exit(1)
     # extract image color space using exiftool
     image_data = np.array(img, dtype=np.float32)
     # if image is integer, normalize it to floating [0, 1]
     if np.issubdtype(img.dtype, np.integer):
-        print(f"original image is {str(img.dtype):s}, normalizing to float32 [0, 1]")
+        # print(f"original image is {str(img.dtype):s}, normalizing to float32 [0, 1]")
         image_data = image_data / np.iinfo(img.dtype).max
-    else:
-        print(f"original image is {str(img.dtype):s}, no need to normalize")
+    # else:
+    #     print(f"original image is {str(img.dtype):s}, no need to normalize")
 
     # if image is RGBA, convert it to RGB by removing alpha channel
     if image_data.shape[2] == 4:
-        print("original image is RGBA, removing alpha channel")
+        # print("original image is RGBA, removing alpha channel")
         image_data = image_data[:, :, :3]
     # reshape image data to 2D array
     pixels = image_data.reshape(-1, 3)
@@ -468,7 +467,7 @@ def image_to_cie_xy(image_path) -> np.ndarray:
     # if cat_matrix is not None:
     #     pixels_xyz = np.dot(pixels_xyz, np.linalg.inv(cat_matrix).transpose())
     xy_array = colour.XYZ_to_xy(pixels_xyz)
-    print('Computing XYZ and xy spent: {:.2f} seconds'.format(time.time() - start_time))
+    # print('Computing XYZ and xy spent: {:.2f} seconds'.format(time.time() - start_time))
 
     return xy_array
 
