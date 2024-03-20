@@ -43,6 +43,12 @@ benchmark_pairs_single = {
         {"source": "fortepan_183723.jpg", "references": ["fortepan_183723.jpg"]},
         {"source": "fortepan_251236.jpg", "references": ["fortepan_251236.jpg"]}
     ]],
+    "inverted_reference": [[  # check if unnatural colors work
+        {"source": "fortepan_183722.jpg", "references": ["fortepan_183722_inv.jpg"]},
+        {"source": "fortepan_250610.jpg", "references": ["fortepan_250610_inv.jpg"]},
+        {"source": "fortepan_183723.jpg", "references": ["fortepan_183723_inv.jpg"]},
+        {"source": "fortepan_251236.jpg", "references": ["fortepan_251236_inv.jpg"]}
+    ]],
     "full_correspondence": [[  # full correspondence
         {"source": "fortepan_201867.jpg", "references": ["fortepan_183723.jpg"]},
         {"source": "fortepan_229825.jpg", "references": ["fortepan_183723.jpg"]},
@@ -246,7 +252,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
     for task_name, tasks in tqdm(benchmark_pairs_single.items()):
         image_id = 0
         for row in tasks:
-            if rows == 1:
+            if rows == 2:
                 table_md += templating.table_header(["Task", "Image #1", "Image #2", "Image #3", "Reference"])
 
             table_line = f'| {templating.pretty_print(task_name)} | '
