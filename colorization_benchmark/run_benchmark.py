@@ -293,7 +293,7 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                 if save_path_attention.exists():
                     table_line += f"{templating.image_html(save_path_attention, web_root)}"
                 table_line += " |"
-            if rows > 1:  # don't print ref in first row
+            if rows > 2:  # don't print ref in first row
                 reference_chromaticity_path = references[
                                                   0].parent / f"{references[0].with_suffix('').name}_chromaticity.png"
                 table_line += (f"{templating.image_html(references[0], web_root)}"
