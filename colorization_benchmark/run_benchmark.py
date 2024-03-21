@@ -194,8 +194,12 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
         [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
 
     table_md = templating.page_header(method_name, benchmark_type, colorizer)
-    table_md += templating.table_header(["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"])
 
+    variation = False
+    if variation:
+        table_md += templating.table_header(["Image #1", "Image #2", "Image #3", "Image #4", "Image #5"])
+    else:
+        table_md += templating.table_header(["Image #1"])
     rows = 0
     for task_name, tasks in tqdm(benchmark_pairs_unconditional.items()):
         print(task_name)
@@ -203,7 +207,7 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
         for row in tasks:
             for task in row:
                 table_line = f'| '
-                for i in range(5):
+                for i in range(5 if variation else 1):
                     lightning.seed_everything(i * 100)
 
                     task_dir = output_dir / benchmark_type / method_name / task_name / str(image_id)
@@ -219,7 +223,8 @@ def unconditional_benchmark(colorizer: BaseColorizer, image_dir: Path, output_di
                             results = colorizer.colorize(source_name, None)
                         color = results["color"]
                         attention = results.get("attention")
-                        color.save(save_path_color, quality=JPG_QUALITY)
+                        if color:
+                            color.save(save_path_color, quality=JPG_QUALITY)
                         if attention:
                             attention.save(save_path_attention, quality=JPG_QUALITY)
 
@@ -248,8 +253,8 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
     print(benchmark_type, method_name)
 
     experiment_root = output_dir / benchmark_type / method_name  # save table here
-    if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
-        [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
+    # if not markdown_only and experiment_root.exists():  # delete only dirs with pictures
+    #     [shutil.rmtree(item) for item in experiment_root.iterdir() if item.is_dir()]
 
     table_md = templating.page_header(method_name, benchmark_type, colorizer)
     table_md += templating.table_header(["Task", "Image #1", "Image #2", "Image #3", "Image #4"])
@@ -277,9 +282,10 @@ def single_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output
                     lightning.seed_everything(100)
                     with torch.no_grad():
                         results = colorizer.colorize(source_name, references)
-                    color = results["color"]
+                    color = results.get("color")
                     attention = results.get("attention")
-                    color.save(save_path_color, quality=JPG_QUALITY)
+                    if color:
+                        color.save(save_path_color, quality=JPG_QUALITY)
                     if attention:
                         attention.save(save_path_attention, quality=JPG_QUALITY)
 
@@ -343,9 +349,10 @@ def multi_reference_benchmark(colorizer: BaseColorizer, image_dir: Path, output_
                 if not markdown_only:
                     with torch.no_grad():
                         results = colorizer.colorize(source_name, references)
-                    color = results["color"]
+                    color = results.get("color")
                     attention = results.get("attention")
-                    color.save(save_path_color, quality=JPG_QUALITY)
+                    if color:
+                        color.save(save_path_color, quality=JPG_QUALITY)
                     if attention:
                         attention.save(save_path_attention, quality=JPG_QUALITY)
 
@@ -407,3 +414,8 @@ if __name__ == '__main__':
     model_path = Path("../third_party/pdnla_net/model_1_ema.pt")
     colorizer = PDLNANet(model_path)
     run_benchmark(colorizer, image_dir, output_dir, False, True, False, markdown_only=markdown_only)
+
+    from colorization_benchmark.model_wrappers.ddcolor import DDColor
+    model_path = Path("damo/cv_ddcolor_image-colorization")
+    colorizer = DDColor(model_path)
+    run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
