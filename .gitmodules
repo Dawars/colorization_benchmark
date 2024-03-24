@@ -7,3 +7,9 @@
 [submodule "third_party/pdnla_net"]
 	path = third_party/pdnla_net
 	url = https://github.com/wd1511/PDNLA-Net.git
+[submodule "third_party/bigcolor"]
+	path = third_party/bigcolor
+	url = https://github.com/KIMGEONUNG/BigColor.git
+[submodule "third_party/inst_colorization"]
+	path = third_party/inst_colorization
+	url = https://github.com/ericsujw/InstColorization.git
