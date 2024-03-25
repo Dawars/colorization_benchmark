@@ -415,7 +415,12 @@ if __name__ == '__main__':
     colorizer = PDLNANet(model_path)
     run_benchmark(colorizer, image_dir, output_dir, False, True, False, markdown_only=markdown_only)
 
-    from colorization_benchmark.model_wrappers.ddcolor import DDColor
-    model_path = Path("damo/cv_ddcolor_image-colorization")
-    colorizer = DDColor(model_path)
+    # from colorization_benchmark.model_wrappers.inst_colorization import InstColorization
+    # model_path = Path("../third_party/inst_colorization").absolute()
+    # colorizer = InstColorization(model_path)
+    # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
+
+    from colorization_benchmark.model_wrappers.colorize_net import ColorizeNet
+    model_path = Path("../third_party/colorize_net").absolute()
+    colorizer = ColorizeNet(model_path)
     run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
