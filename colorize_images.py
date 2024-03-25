@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+#SBATCH -N 1 # n nodes
+#SBATCH --ntasks-per-node=8 # cpu cores
+#SBATCH --job-name=colorizing
+#SBATCH --mem=20GB
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH -x gpu005
 import argparse
 from pathlib import Path
 from tqdm import tqdm
@@ -10,6 +18,8 @@ if __name__ == '__main__':
 
     output_dir: Path = opt.output_dir
     image_dir: Path = opt.image_dir
+
+    output_dir.mkdir(exist_ok=True)
 
     from colorization_benchmark.model_wrappers.ddcolor import DDColor
 
