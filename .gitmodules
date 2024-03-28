@@ -13,3 +13,12 @@
 [submodule "third_party/inst_colorization"]
 	path = third_party/inst_colorization
 	url = https://github.com/ericsujw/InstColorization.git
+[submodule "third_party/colorize_net"]
+	path = third_party/colorize_net
+	url = https://github.com/rensortino/ColorizeNet.git
+[submodule "third_party/colorful_colorization"]
+	path = third_party/colorful_colorization
+	url = https://github.com/richzhang/colorization.git
+[submodule "third_party/ntire23_video_colorization"]
+	path = third_party/ntire23_video_colorization
+	url = https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION.git

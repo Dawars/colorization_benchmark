@@ -420,7 +420,14 @@ if __name__ == '__main__':
     # colorizer = InstColorization(model_path)
     # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
 
-    from colorization_benchmark.model_wrappers.colorize_net import ColorizeNet
-    model_path = Path("../third_party/colorize_net").absolute()
-    colorizer = ColorizeNet(model_path)
+    # from colorization_benchmark.model_wrappers.colorize_net import ColorizeNet
+    # model_path = Path("../third_party/colorize_net").absolute()
+    # colorizer = ColorizeNet(model_path)
+    # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
+
+    from colorization_benchmark.model_wrappers.colorful_colorization import ColorfulColorization
+
+    colorizer = ColorfulColorization(None, model_type="eccv16")
+    run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
+    colorizer = ColorfulColorization(None, model_type="siggraph17")
     run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)

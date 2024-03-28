@@ -1,7 +1,7 @@
 """
 https://github.com/rensortino/ColorizeNet
 https://huggingface.co/rsortino/ColorizeNet
-Requirements: pytorch-lightning==1.5.0
+Requirements: pytorch-lightning<2.0
 """
 
 import sys
