@@ -21,4 +21,7 @@
 	url = https://github.com/richzhang/colorization.git
 [submodule "third_party/ntire23_video_colorization"]
 	path = third_party/ntire23_video_colorization
-	url = https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION.git
+	url = https://github.com/dawars/NTIRE23-VIDEO-COLORIZATION.git
+[submodule "third_party/siggraph2016_colorization"]
+	path = third_party/siggraph2016_colorization
+	url = https://github.com/satoshiiizuka/siggraph2016_colorization.git

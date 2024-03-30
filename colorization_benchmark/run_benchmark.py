@@ -425,9 +425,19 @@ if __name__ == '__main__':
     # colorizer = ColorizeNet(model_path)
     # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
 
-    from colorization_benchmark.model_wrappers.colorful_colorization import ColorfulColorization
+    from colorization_benchmark.model_wrappers.let_there_be_color import LetThereBeColor
+    model_path = Path("../third_party/siggraph2016_colorization").absolute()
+    colorizer = LetThereBeColor(model_path, image_dir=image_dir)
+    run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
 
-    colorizer = ColorfulColorization(None, model_type="eccv16")
-    run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
-    colorizer = ColorfulColorization(None, model_type="siggraph17")
-    run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
+    # from colorization_benchmark.model_wrappers.colorful_colorization import ColorfulColorization
+    #
+    # colorizer = ColorfulColorization(None, model_type="eccv16")
+    # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
+    # colorizer = ColorfulColorization(None, model_type="siggraph17")
+    # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
+
+    # from colorization_benchmark.model_wrappers.ntire23 import Ntire23
+    # model_path = Path("../third_party/ntire23_video_colorization").absolute()
+    # colorizer = Ntire23(model_path)
+    # run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=markdown_only)
