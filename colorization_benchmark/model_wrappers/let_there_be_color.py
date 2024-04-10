@@ -25,7 +25,7 @@ class LetThereBeColor(BaseColorizer):
         self.client.images.pull("italomaia/torch:lua53")
         image_dir = str(opts["image_dir"])
         self.container = self.client.containers.run(
-            image="italomaia/torch:lua53",
+            image="nagadomi/torch7",
             tty=True,
             auto_remove=True, detach=True,
             command="bash",
