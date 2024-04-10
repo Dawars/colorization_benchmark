@@ -5,7 +5,7 @@ Requirements:timm==0.6.5 torch-ema==0.3 tensorboard==2.16
 """
 import sys
 from pathlib import Path
-from types import SimpleNamespace
+from argparse import Namespace
 from typing import List
 from os.path import join, exists
 import pickle
@@ -45,7 +45,7 @@ class BigColor(BaseColorizer):
         path_config = './pretrained/config.pickle'
         path_ckpt_g = './pretrained/G_ema_256.pth'
         path_ckpt = './ckpts/baseline_1000'
-        self.args = SimpleNamespace(**opts)
+        self.args = Namespace(**opts)
 
         print('Target Epoch is %03d' % self.args.epoch)
 
