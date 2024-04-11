@@ -1,5 +1,5 @@
 
-- Last updated: {{ "2024-03-20 20:17:25" | date: site.minima.date_format }}
+- Last updated: {{ "2024-04-11 10:48:48" | date: site.minima.date_format }}
 - GPU info: NVIDIA GeForce GTX 1080 Ti 11 GB, Compute Capability 6.1
 - CUDA version:  11.8
 - PyTorch version: 2.2.1
