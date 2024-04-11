@@ -25,3 +25,9 @@
 [submodule "third_party/siggraph2016_colorization"]
 	path = third_party/siggraph2016_colorization
 	url = https://github.com/satoshiiizuka/siggraph2016_colorization.git
+[submodule "third_party/colornet_metric"]
+	path = third_party/colornet_metric
+	url = https://github.com/V-Sense/colornet-estimating-colorfulness.git
+[submodule "third_party/super_attention"]
+	path = third_party/super_attention
+	url = https://github.com/hernan0930/Super-attention-for-exemplar-based-image-colorization.git

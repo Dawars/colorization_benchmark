@@ -437,7 +437,14 @@ if __name__ == '__main__':
     # colorizer = ColorfulColorization(None, model_type="siggraph17")
     # run_benchmark(colorizer, image_dir, output_dir, True, False, False, markdown_only=markdown_only)
 
-    from colorization_benchmark.model_wrappers.ntire23 import Ntire23
-    model_path = Path("../third_party/ntire23_video_colorization/bistnet_ntire2023").absolute()
-    colorizer = Ntire23(model_path)
-    run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=markdown_only)
+    # from colorization_benchmark.model_wrappers.ntire23 import Ntire23
+    #
+    # model_path = Path("../third_party/ntire23_video_colorization/bistnet_ntire2023").absolute()
+    # colorizer = Ntire23(model_path)
+    # run_benchmark(colorizer, image_dir, output_dir, False, True, True, markdown_only=markdown_only)
+
+    from colorization_benchmark.model_wrappers.super_attention import SuperAttention
+
+    model_path = Path("../third_party/super_attention").absolute()
+    colorizer = SuperAttention(model_path)
+    run_benchmark(colorizer, image_dir, output_dir, False, True, False, markdown_only=markdown_only)
