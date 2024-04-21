@@ -58,7 +58,8 @@ class RoMA(BaseColorizer):
             certainties.append(certainty[0])
             # get LAB
             white_im = torch.ones_like(certainty, device=self.device)
-            vis_im = certainty * warped_tensor + (1 - certainty) * white_im
+            vis_im = torch.lerp(white_im, warped_tensor, (certainty > 0.1).float())
+            # certainty * warped_tensor + (1 - certainty) * white_im
             lab = kornia.color.rgb_to_lab(vis_im)
             labs.append(lab)
             rgbs.append(warped_tensor)
